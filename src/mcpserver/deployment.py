@@ -59,3 +59,21 @@ def perform_websearch(query: str) -> str:
         return f"Request error: {str(e)}"
     except Exception as e:
         return f"Error: {str(e)}"
+        
+@mcp.tool()
+def greeting(name: str) -> str:
+    """Send a greeting"""
+    try:
+        if not name:
+            raise ValueError("Name cannot be empty")
+        return f"Hi, how are you, {name}"
+    except Exception as e:
+        #logger.error(f"Tool execution failed: {e}")
+        raise e
+
+#if __name__ == "__main__":
+    # Ensure you are running with the SSE transport for HTTP connections
+#    mcp.run(transport="sse")
+
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http")

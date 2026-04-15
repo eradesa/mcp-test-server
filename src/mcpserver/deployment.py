@@ -71,9 +71,3 @@ def greeting(name: str) -> str:
         #logger.error(f"Tool execution failed: {e}")
         raise e
 
-#if __name__ == "__main__":
-    # Ensure you are running with the SSE transport for HTTP connections
-#    mcp.run(transport="sse")
-
-if __name__ == "__main__":
-    mcp.run(transport="streamable-http")

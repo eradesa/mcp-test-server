@@ -21,5 +21,3 @@ def main():
     # FastMCP's run() is blocking – perfect for a long‑running service
     mcp.run(transport="streamable-http", host=host, port=port)
 
-if __name__ == "__main__":
-    main()

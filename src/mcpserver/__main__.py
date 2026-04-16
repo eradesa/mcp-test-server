@@ -23,7 +23,11 @@ register_deployment(combined_mcp)
 register_prompts(combined_mcp)
 register_resources(combined_mcp)
 
+def main():
+    #combined_mcp.run(transport="streamable-http")
+    combined_mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
+
 if __name__ == "__main__":
     # Run as a single HTTP server (Streamable HTTP)
     #combined_mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
-    combined_mcp.run(transport="streamable-http")
+    main()

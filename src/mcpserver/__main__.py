@@ -1,23 +1,13 @@
-# combined.py
-import os
+# mcpserver/__main__.py
 from fastmcp import FastMCP
-from mcpserver.deployment import register as register_deployment
-from mcpserver.prompt_server import register as register_prompts
-from mcpserver.resources import register as register_resources
+from mcpserver import register_deployment, register_prompts, register_resources
 
-def create_app() -> FastMCP:
-    """Create and configure the combined MCP server."""
-    mcp = FastMCP("Combined MCP Server")
-    register_deployment(mcp)
-    register_prompts(mcp)
-    register_resources(mcp)
-    return mcp
+# Create the combined server
+mcp = FastMCP("Combined MCP Server")   # ← Must be named 'mcp', 'server', or 'app'
 
-def main():
-    mcp = create_app()
-    # Use environment variables for host/port (common in cloud deployments)
-    host = os.environ.get("HOST", "0.0.0.0")
-    port = int(os.environ.get("PORT", "8002"))
-    # FastMCP's run() is blocking – perfect for a long‑running service
-    mcp.run(transport="streamable-http", host=host, port=port)
+# Register all components
+register_deployment(mcp)
+register_prompts(mcp)
+register_resources(mcp)
 
+# No need to call .run() here – the hosting platform will do that.

@@ -11,7 +11,7 @@
 
 # combined.py
 from fastmcp import FastMCP
-from mcpserver.deployment  import register as register_file_io
+from mcpserver.deployment  import register as register_deployment
 from mcpserver.prompt_server import register as register_prompts
 from mcpserver.resources import register as register_resources
 
@@ -19,7 +19,7 @@ from mcpserver.resources import register as register_resources
 combined_mcp = FastMCP("Combined MCP Server")
 
 # Register all components
-register_file_io(combined_mcp)
+register_deployment(combined_mcp)
 register_prompts(combined_mcp)
 register_resources(combined_mcp)
 

@@ -1,17 +1,19 @@
 from fastmcp import FastMCP
+#from mcp.server.fastmcp import FastMCP
+from mcpserver.common import mcp
 
 mcp = FastMCP("Resources")
 
 # -------------------------------------------------------------------------
 # Tools (callable by LLM)
 # -------------------------------------------------------------------------
-@mcp.tool
+@mcp.tool()
 def get_inventory_overviews() -> str:
     """Get inventory overview from get_inventory_overview"""
     # Call the resource function and return its result
     return get_inventory_overview()
 
-@mcp.tool 
+@mcp.tool ()
 def get_inventory_price(item_name: str) -> str:
     """Get price for a specific inventory item"""
     # First get the ID from the name
@@ -68,5 +70,3 @@ def get_inventory_id_from_inventory_name(inventory_name: str) -> str:
         return f"Error: No ID found for item '{inventory_name}'"
     return inventory_name_to_id[inventory_name]
 
-if __name__ == "__main__":
-    mcp.run()

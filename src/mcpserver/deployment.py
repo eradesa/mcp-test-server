@@ -9,6 +9,8 @@ from pathlib import Path
 from typing import Optional, Union
 from fastmcp import FastMCP
 
+YOUR_API_KEY = '8692ebca30473ab0a3238a5047c1d00b'
+
 # Optional imports for extended formats
 try:
     from docx import Document

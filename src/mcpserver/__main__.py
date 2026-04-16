@@ -15,15 +15,15 @@ from mcpserver.deployment  import register as register_deployment
 from mcpserver.prompt_server import register as register_prompts
 from mcpserver.resources import register as register_resources
 
-# Create the main combined server
-combined_mcp = FastMCP("Combined MCP Server")
-
-# Register all components
-register_deployment(combined_mcp)
-register_prompts(combined_mcp)
-register_resources(combined_mcp)
 
 def main():
+    # Create the main combined server
+    combined_mcp = FastMCP("Combined MCP Server")
+    # Register all components
+    register_deployment(combined_mcp)
+    register_prompts(combined_mcp)
+    register_resources(combined_mcp)
+
     combined_mcp.run(transport="streamable-http")
     #combined_mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
 

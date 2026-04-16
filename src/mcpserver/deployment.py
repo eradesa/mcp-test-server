@@ -12,7 +12,7 @@ from fastmcp import FastMCP
 #from mcpserver.common import mcp
 
 YOUR_API_KEY = '8692ebca30473ab0a3238a5047c1d00b'
-
+#mcp = FastMCP("File I/O Server")
 def register(mcp: FastMCP):
     # Optional imports for extended formats
     try:
@@ -159,6 +159,17 @@ def register(mcp: FastMCP):
     # -------------------------------------------------------------------------
     # Tools
     # -------------------------------------------------------------------------
+  
+    @mcp.tool()
+    def list_directory(path: str) -> str:
+        
+        """List contents of a directory."""
+        try:
+            files = os.listdir(path)
+            return json.dumps(files, indent=2)
+        except Exception as e:
+            return f"Error: {str(e)}"
+        
     @mcp.tool()
     def read_file(file_path: str) -> str:
         """
@@ -287,3 +298,25 @@ def register(mcp: FastMCP):
             return "\n".join(files)
         except Exception as e:
             return f"Error listing files: {e}"
+
+    @mcp.tool
+    def get_cryptocurrency_price(crypto: str) -> str:
+        """
+        Gets the price of a cryptocurrency.
+        Args:
+            crypto: symbol of the cryptocurrency (e.g., 'bitcoin', 'ethereum').
+        """
+        try:
+            # Use CoinGecko API to fetch current price in USD
+            url = f"https://api.coingecko.com/api/v3/simple/price"
+            params = {"ids": crypto.lower(), "vs_currencies": "usd"}
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            price = data.get(crypto.lower(), {}).get("usd")
+            if price is not None:
+                return f"The price of {crypto} is ${price} USD."
+            else:
+                return f"Price for {crypto} not found."
+        except Exception as e:
+            return f"Error fetching price for {crypto}: {e}"

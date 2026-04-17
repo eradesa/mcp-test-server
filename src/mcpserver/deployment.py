@@ -197,7 +197,7 @@ def register(mcp: FastMCP):
     @mcp.tool()
     #def write_file(content: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
     def write_file(content_b64: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
-    content = base64.b64decode(content_b64).decode('utf-8')
+        content = base64.b64decode(content_b64).decode('utf-8')
         """
         Make a downloadable file. Automatically detects extension from content if not provided.
         Supports .txt, .py, .js, .json, .md, .html, .css, .docx, .xlsx, .pdf.
@@ -205,11 +205,11 @@ def register(mcp: FastMCP):
         will generate the appropriate binary file.
         
         When calling the write_file tool, you MUST provide valid JSON. 
-	- Escape all double quotes inside the content with backslashes: \"
-	- Replace newlines with \\n
-	- Do NOT use triple quotes (\"\"\") inside the JSON string.
-	If the content is large, keep it as a single line with escaped newlines.
-	Example: {"filename": "test.txt", "content": "Line 1\\nLine 2"}
+	    - Escape all double quotes inside the content with backslashes: \"
+	    - Replace newlines with \\n
+    	- Do NOT use triple quotes (\"\"\") inside the JSON string.
+	    If the content is large, keep it as a single line with escaped newlines.
+	    Example: {"filename": "test.txt", "content": "Line 1\\nLine 2"}
 
         """
         # Determine extension

@@ -197,7 +197,7 @@ def register(mcp: FastMCP):
     @mcp.tool()
     def write_file(content: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
         """
-        Write content to a file. Automatically detects extension from content if not provided.
+        Make a downloadable file. Automatically detects extension from content if not provided.
         Supports .txt, .py, .js, .json, .md, .html, .css, .docx, .xlsx, .pdf.
         For binary formats (.docx, .xlsx, .pdf), the content should be plain text; the server
         will generate the appropriate binary file.

@@ -14,3 +14,9 @@ register_local_DB(mcp)
 
 
 # No need to call .run() here – the hosting platform will do that.
+#def main():
+    #mcp.run(transport="streamable-http")
+#    mcp.run(transport="streamable-http", host="0.0.0.0", port=8005)
+
+#if __name__ == "__main__":#
+#    main()

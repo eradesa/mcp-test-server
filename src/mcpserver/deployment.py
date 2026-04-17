@@ -46,11 +46,16 @@ def register(mcp: FastMCP):
     # -------------------------------------------------------------------------
     # Helper functions
     # -------------------------------------------------------------------------
+    # =============================================================================
+    # Improved extension detection
+    # =============================================================================
     def detect_extension(content: str) -> str:
-        """Detect file extension based on content heuristics."""
+        """Detect file extension based on content heuristics (improved for Python)."""
         content_lower = content.lower()
-        # Python
-        if re.search(r'^\s*import\s+\w+|^\s*from\s+\w+\s+import|^\s*def\s+\w+\s*\(|^\s*class\s+\w+', content, re.MULTILINE):
+        # Python: look for typical Python patterns
+        if (re.search(r'^\s*#!/usr/bin/env\s+python', content, re.MULTILINE) or
+            re.search(r'^\s*import\s+\w+|^\s*from\s+\w+\s+import|^\s*def\s+\w+\s*\(|^\s*class\s+\w+', content, re.MULTILINE) or
+            re.search(r'if\s+__name__\s*==\s*[\'"]__main__[\'"]', content)):
             return ".py"
         # JavaScript
         if re.search(r'^\s*(const|let|var|function|=>|console\.log|document\.|window\.)', content, re.MULTILINE):
@@ -71,7 +76,9 @@ def register(mcp: FastMCP):
         # Markdown
         if re.search(r'^#{1,6}\s+\w+|^\s*[-*+]\s+\w+|\[.*\]\(.*\)', content, re.MULTILINE):
             return ".md"
+        # Default to .txt
         return ".txt"
+
 
     def read_text_file(path: Path) -> str:
         """Read a text file with utf-8 encoding."""
@@ -194,15 +201,21 @@ def register(mcp: FastMCP):
         except Exception as e:
             return f"Error reading file: {e}"
 
+
+    # =============================================================================
+    # Corrected write_file tool
+    # =============================================================================
     @mcp.tool()
     def write_file(content: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
-    #def write_file(content_b64: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
-        #content = base64.b64decode(content_b64).decode('utf-8')
         """
-        Make a downloadable file. Automatically detects extension from content if not provided.
+        Create a downloadable file. The file extension is determined as follows:
+        1. If 'extension' is provided, it overrides everything.
+        2. Else if 'filename' contains a dot extension (e.g., 'script.py'), that extension is used.
+        3. Else the extension is auto-detected from the content.
+        
         Supports .txt, .py, .js, .json, .md, .html, .css, .docx, .xlsx, .pdf.
         For binary formats (.docx, .xlsx, .pdf), the content should be plain text; the server
-        will generate the appropriate binary file.
+        will generate the appropriate binary file.            
         
         When calling the write_file tool, you MUST provide valid JSON. 
 	    - Escape all double quotes inside the content with backslashes: \"
@@ -210,24 +223,29 @@ def register(mcp: FastMCP):
     	- Do NOT use triple quotes (\"\"\") inside the JSON string.
 	    If the content is large, keep it as a single line with escaped newlines.
 	    Example: {"filename": "test.txt", "content": "Line 1\\nLine 2"}
-
+     
         """
-        # Determine extension
+        # 1. Determine the final extension
         if extension:
             ext = extension if extension.startswith('.') else f'.{extension}'
         else:
-            ext = detect_extension(content)
+            # Check if filename already has an extension
+            if filename and '.' in filename:
+                # Extract extension from filename (including dot)
+                ext = '.' + filename.split('.')[-1]
+            else:
+                # Auto-detect from content
+                ext = detect_extension(content)
         
-        # Generate filename if not provided
+        # 2. Determine the base filename (without extension)
         if not filename:
             filename = f"file_{int(time.time())}"
-        # Remove any existing extension from filename
-        if '.' in filename:
-            filename = filename.split('.')[0]
+        # Remove any existing extension from the provided filename (we'll add our own)
+        base_name = filename.split('.')[0]
         
-        full_path = Path(BASE_DIR) / f"{filename}{ext}"
+        full_path = Path(BASE_DIR) / f"{base_name}{ext}"
         
-        # Write based on extension
+        # 3. Write based on extension
         try:
             if ext == '.docx':
                 return write_docx(full_path, content)
@@ -238,8 +256,8 @@ def register(mcp: FastMCP):
             else:
                 return write_text_file(full_path, content)
         except Exception as e:
-            return f"Error writing file: {e}"
-
+            return f"Error writing file: {e}"    
+    
 
     @mcp.tool()
     def perform_websearch(query: str) -> str:

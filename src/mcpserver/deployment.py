@@ -195,7 +195,9 @@ def register(mcp: FastMCP):
             return f"Error reading file: {e}"
 
     @mcp.tool()
-    def write_file(content: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
+    #def write_file(content: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
+    def write_file(content_b64: str, filename: Optional[str] = None, extension: Optional[str] = None) -> str:
+    content = base64.b64decode(content_b64).decode('utf-8')
         """
         Make a downloadable file. Automatically detects extension from content if not provided.
         Supports .txt, .py, .js, .json, .md, .html, .css, .docx, .xlsx, .pdf.

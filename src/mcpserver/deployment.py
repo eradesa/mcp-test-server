@@ -201,6 +201,14 @@ def register(mcp: FastMCP):
         Supports .txt, .py, .js, .json, .md, .html, .css, .docx, .xlsx, .pdf.
         For binary formats (.docx, .xlsx, .pdf), the content should be plain text; the server
         will generate the appropriate binary file.
+        
+        When calling the write_file tool, you MUST provide valid JSON. 
+	- Escape all double quotes inside the content with backslashes: \"
+	- Replace newlines with \\n
+	- Do NOT use triple quotes (\"\"\") inside the JSON string.
+	If the content is large, keep it as a single line with escaped newlines.
+	Example: {"filename": "test.txt", "content": "Line 1\\nLine 2"}
+
         """
         # Determine extension
         if extension:

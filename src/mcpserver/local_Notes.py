@@ -3,7 +3,8 @@ from fastmcp import FastMCP
 
 #mcp = FastMCP("LocalNotes")
 def register(mcp: FastMCP):
-    @mcp.tool()
+
+    @mcp.tool()    
     def add_note_to_file(content: str) -> str:
         """
         Appends the given content to the user's local notes.
@@ -11,7 +12,15 @@ def register(mcp: FastMCP):
             content: The text content to append.
         """
 
-        filename = 'notes.txt'
+        # Use home directory instead of current directory
+        import os
+        from pathlib import Path
+
+        # Create notes directory in home folder
+        notes_dir = Path.home() / "mcp_notes"
+        notes_dir.mkdir(exist_ok=True)
+
+        filename = notes_dir / "notes.txt"
 
         try:
             with open(filename, "a", encoding="utf-8") as f:
@@ -19,7 +28,7 @@ def register(mcp: FastMCP):
             return f"Content appended to {filename}."
         except Exception as e:
             return f"Error appending to file {filename}: {e}"
-        
+            
 
     @mcp.tool()
     def read_notes() -> str:

@@ -11,11 +11,20 @@ def register(mcp: FastMCP):
         Args:
             content: The text content to append.
         """
+
+        # Use home directory instead of current directory
         import os
         from pathlib import Path
 
-        # Use current working directory instead of home directory
-        notes_dir = Path.cwd() / "mcp_notes"
+        # Create notes directory in home folder
+
+        home = Path.home()
+        cwd = Path.cwd()
+        print(f"Home: {home}")  # Check what this returns
+        print(f"CWD: {cwd}")    # Check current directory
+        print(f"User: {os.getlogin()}")  # Check running user
+
+        notes_dir = Path.home() / "mcp_notes"
         notes_dir.mkdir(exist_ok=True)
 
         filename = notes_dir / "notes.txt"
@@ -26,6 +35,7 @@ def register(mcp: FastMCP):
             return f"Content appended to {filename}."
         except Exception as e:
             return f"Error appending to file {filename}: {e}"
+
                 
 
     @mcp.tool()
@@ -35,6 +45,12 @@ def register(mcp: FastMCP):
         """
         import os
         from pathlib import Path
+
+        home = Path.home()
+        cwd = Path.cwd()
+        print(f"Home: {home}")  # Check what this returns
+        print(f"CWD: {cwd}")    # Check current directory
+        print(f"User: {os.getlogin()}")  # Check running user
 
         # Use the SAME path as add_note_to_file
         notes_dir = Path.home() / "mcp_notes"  # Or Path("/tmp") / "mcp_notes" if that's what's actually being used

@@ -305,7 +305,7 @@ def register(mcp: FastMCP):
         except Exception as e:
             return f"Error: {str(e)}"
             
-    @mcp.tool()
+    #@mcp.tool()
     def greeting(name: str) -> str:
         """Send a greeting"""
         try:
